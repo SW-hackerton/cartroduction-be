@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: "cartroduction-backend"
+  profiles:
+    include:
+      - db
