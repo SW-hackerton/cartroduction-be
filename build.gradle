@@ -16,8 +16,8 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
 }
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -27,8 +27,8 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 
 	// 블록체인 관련
-//	implementation 'com.klaytn.caver:core:1.8.0'
-//	implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+	implementation 'com.klaytn.caver:core:1.8.0'
+	implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 }
 
 tasks.named('test') {
