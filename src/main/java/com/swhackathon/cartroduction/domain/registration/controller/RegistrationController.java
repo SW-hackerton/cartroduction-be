@@ -4,6 +4,7 @@ import com.swhackathon.cartroduction.domain.registration.domain.entity.Registrat
 import com.swhackathon.cartroduction.domain.registration.dto.RegistrationRequest;
 import com.swhackathon.cartroduction.domain.registration.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,6 @@ public class RegistrationController {
 	@PostMapping("/manager/register")
 	public ResponseEntity<Registration> register(@Validated @RequestBody RegistrationRequest request) {
 		Registration registration = request.toEntity();
-		return ResponseEntity.ok(registrationService.save(registration));
+		return new ResponseEntity<>(registrationService.save(registration), HttpStatus.CREATED);
 	}
 }
