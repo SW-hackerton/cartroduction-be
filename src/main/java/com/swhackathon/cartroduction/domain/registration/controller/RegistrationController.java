@@ -6,6 +6,7 @@ import com.swhackathon.cartroduction.domain.registration.dto.RegistrationRespons
 import com.swhackathon.cartroduction.domain.registration.service.RegistrationService;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,14 @@ public class RegistrationController {
 	public ResponseEntity<List<Registration>> findAll() {
 		return ResponseEntity.ok()
 			.body(registrationService.findAll().stream()
+				.map(RegistrationResponse::of)
+				.collect(Collectors.toList()));
+	}
+
+	@GetMapping("/{keyword}")
+	public ResponseEntity<List<Registration>> findByCarNames(@PathParam("keyword") String keyword) {
+		return ResponseEntity.ok()
+			.body(registrationService.findByCarName(keyword).stream()
 				.map(RegistrationResponse::of)
 				.collect(Collectors.toList()));
 	}
