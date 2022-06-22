@@ -24,6 +24,10 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// 블록체인 관련
+	implementation 'com.klaytn.caver:core:1.8.0'
+	implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 }
 
 tasks.named('test') {
