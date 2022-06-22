@@ -1,7 +1,6 @@
 package com.swhackathon.cartroduction.domain.registration.dto;
 
 import com.swhackathon.cartroduction.domain.registration.domain.entity.Registration;
-import com.swhackathon.cartroduction.domain.registration.domain.entity.RepairList;
 import com.swhackathon.cartroduction.domain.registration.domain.enumeration.Category;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -30,10 +29,11 @@ public class RegistrationRequest {
 	private LocalDateTime date;
 
 	public Registration toEntity() {
-		final RepairList repairList = RepairListResponse.of(category, content, price);
 		return Registration.builder()
 			.managerName(this.managerName)
-			.repairList(repairList)
+			.category(this.category)
+			.content(this.content)
+			.price(this.price)
 			.carNumber(this.carNumber)
 			.carDistance(this.carDistance)
 			.estimatesImageUrl(this.estimatesImageUrl)
