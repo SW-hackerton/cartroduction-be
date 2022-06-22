@@ -26,6 +26,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'mysql:mysql-connector-java'
 
+	// swagger
+	implementation "io.springfox:springfox-boot-starter:3.0.0"
+	implementation "io.springfox:springfox-swagger-ui:3.0.0"
+
 	// 블록체인 관련
 	implementation 'com.klaytn.caver:core:1.8.0'
 	implementation 'com.squareup.okhttp3:okhttp:4.9.0'
