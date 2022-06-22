@@ -1,19 +1,23 @@
 package com.swhackathon.cartroduction.domain.registration.domain.entity;
 
-import com.swhackathon.cartroduction.domain.user.domain.User;
 import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -21,16 +25,18 @@ public class Registration {
 
 	@Id
 	@Column(name = "registration_form_id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "user_id")
+//	private User user;
 
 	@Column(name = "manager_name", nullable = false)
 	private String managerName;
 
-	@Column(name = "repair_list", nullable = false)
+	@OneToOne(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
+	@JoinColumn(name = "repair_list", nullable = false)
 	private RepairList repairList;
 
 	@Column(name = "car_number", nullable = false)
