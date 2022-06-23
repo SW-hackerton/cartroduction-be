@@ -30,8 +30,6 @@ import java.util.List;
 @Transactional
 public class BlockchainService {
 
-	private final IpfsService ipfsService = new IpfsService();
-
 	private final SingleKeyring executor;
 	private final Caver caver = new Caver("https://api.baobab.klaytn.net:8651/");
 
@@ -62,13 +60,14 @@ public class BlockchainService {
 			repairListString += data.getCategory().toString()+":"
 					+data.getContent()+":"+data.getPrice()+";";
 		}
+		String carImgUrl = registration.getCarImageUrl();
+		String estimatesImgUrl = registration.getEstimatesImageUrl();
 
-		String carImgUrl = ipfsService.uploadImg(registration.getCarImageUrl());
-		String estimatesImgUrl = ipfsService.uploadImg(registration.getEstimatesImageUrl());
+		System.out.println(repairListString+carImgUrl+estimatesImgUrl);
+
 
 		try {
 			Contract contract = caver.contract.create(contractABI, contractAddress);
-			System.out.println(1);
 
 			SendOptions sendOptions = new SendOptions();
 			sendOptions.setFrom(executor.getAddress());
@@ -76,8 +75,8 @@ public class BlockchainService {
 			sendOptions.setGas(BigInteger.valueOf(4000000));
 			TransactionReceipt.TransactionReceiptData receipt = contract.send(sendOptions,
 				"registMaintenanceData", userId, managerName, date,
-				carNumber, carDistance, repairListString, carImgUrl, estimatesImgUrl);
-			System.out.println(receipt);
+				carNumber, (long)carDistance, repairListString, carImgUrl, estimatesImgUrl);
+			System.out.println(receipt.getTxError());
 		} catch (IOException | TransactionException | ClassNotFoundException | NoSuchMethodException |
 			InvocationTargetException | InstantiationException | IllegalAccessException e) {
 			//handle exception..
@@ -100,7 +99,7 @@ public class BlockchainService {
 				long userId = ((Uint256) result.get(0)).getValue().longValue();
 				String name = (String) result.get(1).getValue();
 				String date = (String) result.get(2).getValue();
-				int distance = (int) result.get(3).getValue();
+				int distance = ((Uint256)result.get(3)).getValue().intValue();
 
 				//repairList 만들기
 				String repairListStrings[] = ((String) result.get(4).getValue()).split(";");

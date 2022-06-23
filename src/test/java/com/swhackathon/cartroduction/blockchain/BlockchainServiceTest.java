@@ -29,22 +29,20 @@ public class BlockchainServiceTest {
 
     @Test
     void registTest() throws CipherException, IOException {
-        RepairList rl = new RepairList(null, Category.엔진오일교체,"b","c");
+        RepairList rl = new RepairList(null, Category.엔진오일교체,"b",12345);
         List<RepairList> repairLists = new ArrayList<>();
         repairLists.add(rl);
-        Registration reg = new Registration((long)1,"고고유진", repairLists, "22이2222", "235","url1","url2", LocalDate.now());
-
-
+        Registration reg = new Registration((long)1,"고고유진", repairLists, "22이2222", 12345,"url1","url2", LocalDate.now());
 
         blockchainService.RegistToBC(reg);
     }
 
     @Test
     void getMaintTest() {
-        RepairList rl = new RepairList(null, Category.엔진오일교체,"b","c");
+        RepairList rl = new RepairList(null, Category.엔진오일교체,"b",12345);
         List<RepairList> repairLists = new ArrayList<>();
         repairLists.add(rl);
-        Registration reg = new Registration(null,"고고유진", repairLists, "22이2222", "235","url1","url2", LocalDate.now());
+        Registration reg = new Registration(null,"고고유진", repairLists, "22이2222", 12345,"url1","url2", LocalDate.now());
 
 
         blockchainService.getMaintenanceListsByCarNumber(reg.getCarNumber());
@@ -52,10 +50,10 @@ public class BlockchainServiceTest {
 
     @Test
     void getMaintCountTest(){
-        RepairList rl = new RepairList(null, Category.엔진오일교체,"b","c");
+        RepairList rl = new RepairList(null, Category.기타,"b",12345);
         List<RepairList> repairLists = new ArrayList<>();
         repairLists.add(rl);
-        Registration reg = new Registration(null,"고고유진", repairLists, "22이2222", "235","url1","url2", LocalDate.now());
+        Registration reg = new Registration(null,"고고유진", repairLists, "22이2222", 30000,"url1","url2", LocalDate.now());
 
 
         blockchainService.getMaintenanceCountByCarNumber(reg.getCarNumber());

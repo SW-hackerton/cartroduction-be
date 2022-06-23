@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class BlockchainRegistrationController {
     public final BlockchainService blockchainService;
 
-    @PostMapping(value = "/manager/register")
+    @PostMapping(value = "/manager/register2")
     public ResponseEntity register(
             @Validated @RequestBody RegistrationRequest request) throws CipherException, IOException {
         Registration registration = request.toEntity();
@@ -33,7 +33,7 @@ public class BlockchainRegistrationController {
         return new ResponseEntity<>("success", HttpStatus.CREATED);
     }
 
-    @GetMapping("/{keyword}")
+    @GetMapping("/2/{keyword}")
     public ResponseEntity<List<Registration>> getMaintenanceByCarNames(@PathVariable("keyword") String keyword) {
 
         System.out.println(keyword);
