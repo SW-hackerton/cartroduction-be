@@ -53,4 +53,18 @@ public class Registration {
 
 	@CreationTimestamp
 	private LocalDateTime date;
+
+	@Override
+	public String toString() {
+		return "Registration{" +
+				"id=" + id +
+				", managerName='" + managerName + '\'' +
+				", repairList=" + repairList +
+				", carNumber='" + carNumber + '\'' +
+				", carDistance='" + carDistance + '\'' +
+				", estimatesImageUrl='" + estimatesImageUrl + '\'' +
+				", carImageUrl='" + carImageUrl + '\'' +
+				", date=" + date +
+				'}';
+	}
 }
