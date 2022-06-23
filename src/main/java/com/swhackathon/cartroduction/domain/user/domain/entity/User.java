@@ -1,4 +1,4 @@
-package com.swhackathon.cartroduction.domain.user.domain;
+package com.swhackathon.cartroduction.domain.user.domain.entity;
 
 import com.swhackathon.cartroduction.domain.registration.domain.entity.Registration;
 import com.swhackathon.cartroduction.domain.user.domain.enumeration.Type;
