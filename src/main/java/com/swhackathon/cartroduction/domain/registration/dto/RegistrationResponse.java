@@ -5,10 +5,12 @@ import com.swhackathon.cartroduction.domain.registration.domain.enumeration.Cate
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
-public class RegistrationRequest {
+@NoArgsConstructor
+public class RegistrationResponse {
 
 	private String managerName;
 
@@ -28,17 +30,18 @@ public class RegistrationRequest {
 
 	private LocalDateTime date;
 
-	public Registration toEntity() {
+	public static Registration of(Registration registration) {
 		return Registration.builder()
-			.managerName(this.managerName)
-			.category(this.category)
-			.content(this.content)
-			.price(this.price)
-			.carNumber(this.carNumber)
-			.carDistance(this.carDistance)
-			.estimatesImageUrl(this.estimatesImageUrl)
-			.carImageUrl(this.carImageUrl)
-			.date(this.date)
+			.id(registration.getId())
+			.managerName(registration.getManagerName())
+			.category(registration.getCategory())
+			.content(registration.getContent())
+			.price(registration.getPrice())
+			.carNumber(registration.getCarNumber())
+			.carDistance(registration.getCarDistance())
+			.estimatesImageUrl(registration.getEstimatesImageUrl())
+			.carImageUrl(registration.getCarImageUrl())
+			.date(registration.getDate())
 			.build();
 	}
 }

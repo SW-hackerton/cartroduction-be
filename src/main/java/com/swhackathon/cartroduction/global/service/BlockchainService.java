@@ -55,13 +55,12 @@ public class BlockchainService {
     //블록체인에 데이터 등록
     public void RegistToBC(Registration registration) throws CipherException, IOException {
 
-        RepairList repairList = registration.getRepairList();
         long userId =registration.getId();
         String managerName= registration.getManagerName();
         String date=registration.getDate().toString();
         String carNumber= registration.getCarNumber();
         String carDistance=registration.getCarDistance();
-        String repairListString=""+repairList.getCategory()+":"+repairList.getContent()+":"+repairList.getPrice();
+        String repairListString=""+registration.getCategory().toString()+":"+registration.getContent()+":"+registration.getPrice();
         String carImgUrl=registration.getCarImageUrl();
         String estimatesImgUrl= registration.getEstimatesImageUrl();
 

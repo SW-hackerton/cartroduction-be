@@ -4,6 +4,7 @@ spring:
   profiles:
     include:
       - db
-      - blockchain
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
