@@ -1,5 +1,7 @@
 package com.swhackathon.cartroduction.global.service;
 
+import static com.swhackathon.cartroduction.global.domain.confidential.ContractInfo.*;
+
 import com.klaytn.caver.Caver;
 import com.klaytn.caver.abi.datatypes.Type;
 import com.klaytn.caver.abi.datatypes.generated.Uint256;
@@ -10,18 +12,7 @@ import com.klaytn.caver.wallet.keyring.KeyringFactory;
 import com.klaytn.caver.wallet.keyring.SingleKeyring;
 import com.swhackathon.cartroduction.domain.registration.domain.entity.Registration;
 import com.swhackathon.cartroduction.domain.registration.domain.enumeration.Category;
-import com.swhackathon.cartroduction.domain.user.domain.entity.User;
-import com.swhackathon.cartroduction.domain.user.domain.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.GenericXmlApplicationContext;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.web3j.crypto.CipherException;
@@ -32,127 +23,116 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
 @Transactional
 public class BlockchainService {
 
-    //스마트 컨트랙트 메소드 사용에 필요한 필수 정보
-    /*
-    String contractAddress = "";
-    String contractABI = "";
-    String privateKey = "";
-*/
-    String contractAddress = "0x1E1466ecfa35B26aB5c7b41Da1b410E58b9F5954";
-    String contractABI = "[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\",\"signature\":\"constructor\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_userId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_managerName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_date\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_carNumber\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_carDistance\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_repairList\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_carImgUrl\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_estimatesImgUrl\",\"type\":\"string\"}],\"name\":\"resistMaintenanceData\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"signature\":\"0x586924a6\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"string\",\"name\":\"_carNumber\",\"type\":\"string\"}],\"name\":\"getMaintenanceCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\",\"signature\":\"0xf9552811\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"string\",\"name\":\"_carNumber\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"idx\",\"type\":\"uint256\"}],\"name\":\"getMaintenance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\",\"signature\":\"0x7c76bd4f\"}]";
-    String privateKey = "0x6aac4e8d4ed4cd5193a67733ec499236a9a66f1b073ef7955a02520cc2286157";
+	private final SingleKeyring executor;
+	private final Caver caver = new Caver("https://api.baobab.klaytn.net:8651/");
 
+	//생성자에서 관리자 지갑 추가
+	@Autowired
+	public BlockchainService() {
+		executor = KeyringFactory.createFromPrivateKey(privateKey);
+		caver.wallet.add(executor);
+	}
 
+	//블록체인에 데이터 등록
+	public void RegistToBC(Registration registration) throws CipherException, IOException {
+		long userId = registration.getId();
+		String managerName = registration.getManagerName();
+		String date = registration.getDate().toString();
+		String carNumber = registration.getCarNumber();
+		String carDistance = registration.getCarDistance();
+		String repairListString =
+			"" + registration.getCategory().toString() + ":" + registration.getContent() + ":"
+				+ registration.getPrice();
+		String carImgUrl = registration.getCarImageUrl();
+		String estimatesImgUrl = registration.getEstimatesImageUrl();
 
+		try {
+			Contract contract = caver.contract.create(contractABI, contractAddress);
+			System.out.println(1);
 
-    SingleKeyring executor;
+			SendOptions sendOptions = new SendOptions();
+			sendOptions.setFrom(executor.getAddress());
 
-    Caver caver = new Caver("https://api.baobab.klaytn.net:8651/");
+			sendOptions.setGas(BigInteger.valueOf(4000000));
+			TransactionReceipt.TransactionReceiptData receipt = contract.send(sendOptions,
+				"resistMaintenanceData", userId, managerName, date,
+				carNumber, carDistance, repairListString, carImgUrl, estimatesImgUrl);
+			System.out.println(receipt);
+		} catch (IOException | TransactionException | ClassNotFoundException | NoSuchMethodException |
+			InvocationTargetException | InstantiationException | IllegalAccessException e) {
+			//handle exception..
+			System.out.print("ERROR!!!!!: ");
 
-    //생성자에서 관리자 지갑 추가
-    @Autowired
-    public BlockchainService() {
-        System.out.print(privateKey);
-        executor = KeyringFactory.createFromPrivateKey(privateKey);
-        caver.wallet.add(executor);
-    }
+			System.out.println(e);
+		}
+	}
 
-    //블록체인에 데이터 등록
-    public void RegistToBC(Registration registration) throws CipherException, IOException {
+	public List<Registration> getMaintenanceListsByCarNumber(String carNumber) {
 
-        long userId =registration.getId();
-        String managerName= registration.getManagerName();
-        String date=registration.getDate().toString();
-        String carNumber= registration.getCarNumber();
-        String carDistance=registration.getCarDistance();
-        String repairListString=""+registration.getCategory().toString()+":"+registration.getContent()+":"+registration.getPrice();
-        String carImgUrl=registration.getCarImageUrl();
-        String estimatesImgUrl= registration.getEstimatesImageUrl();
+		int count = getMaintenanceCountByCarNumber(carNumber);
+		List<Registration> lists = new ArrayList<Registration>();
+		try {
+			Contract contract = caver.contract.create(contractABI, contractAddress);
 
-        try{
-            Contract contract = caver.contract.create(contractABI, contractAddress);
-            System.out.println(1);
+			for (int i = 0; i < count; i++) {
+				List<Type> result = contract.call("getMaintenance", carNumber, i);
 
-            SendOptions sendOptions = new SendOptions();
-            sendOptions.setFrom(executor.getAddress());
+				long userId = ((Uint256) result.get(0)).getValue().longValue();
+				String name = (String) result.get(1).getValue();
+				String date = (String) result.get(2).getValue();
+				String distance = ((Uint256) result.get(3)).getValue().toString();
 
-            sendOptions.setGas(BigInteger.valueOf(4000000));
-            TransactionReceipt.TransactionReceiptData receipt = contract.send(sendOptions, "resistMaintenanceData", userId, managerName, date,
-                                                                                carNumber, carDistance, repairListString, carImgUrl, estimatesImgUrl);
-            System.out.println(receipt);
-        } catch (IOException | TransactionException | ClassNotFoundException | NoSuchMethodException |
-                 InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            //handle exception..
-            System.out.print("ERROR!!!!!: ");
+				//repairList 만들기
+				String repairListStrings[] = ((String) result.get(4).getValue()).split(":", 3);
 
-            System.out.println(e);
-        }
-    }
+				String carImgUrl = (String) result.get(5).getValue();
+				String estimateImgUrl = (String) result.get(6).getValue();
 
-    public List<Registration> getMaintenanceListsByCarNumber(String carNumber) {
+				//User user = new User().findById
 
-        int count = getMaintenanceCountByCarNumber(carNumber);
-        List<Registration> lists = new ArrayList<Registration>();
-        try{
-            Contract contract = caver.contract.create(contractABI, contractAddress);
+				Registration reg = new Registration(userId, name,
+					Category.valueOf(repairListStrings[0]), repairListStrings[1],
+					repairListStrings[2], carNumber, distance, estimateImgUrl, carImgUrl,
+					LocalDateTime.parse(date));
+				lists.add(reg);
+				System.out.println(reg);
+			}
+		} catch (IOException | ClassNotFoundException | NoSuchMethodException |
+			InvocationTargetException | InstantiationException | IllegalAccessException e) {
+			//handle exception..
+			System.out.print("ERROR!!!!!: ");
 
-            for(int i = 0; i < count;i++) {
-                List<Type> result = contract.call("getMaintenance", carNumber, i);
+			System.out.println(e);
+		}
 
-                long userId = ((Uint256)result.get(0)).getValue().longValue();
-                String name = (String)result.get(1).getValue();
-                String date = (String)result.get(2).getValue();
-                String distance = ((Uint256)result.get(3)).getValue().toString();
+		return lists;
+	}
 
-                //repairList 만들기
-                String repairListStrings[] = ((String)result.get(4).getValue()).split(":", 3);
+	public int getMaintenanceCountByCarNumber(String carNumber) {
+		int length = 0;
 
-                String carImgUrl = (String)result.get(5).getValue();
-                String estimateImgUrl = (String)result.get(6).getValue();
+		try {
+			Contract contract = caver.contract.create(contractABI, contractAddress);
 
-                //User user = new User().findById
+			List<Type> result = contract.call("getMaintenanceCount", carNumber);
 
-                Registration reg = new Registration(userId, name, Category.valueOf(repairListStrings[0]),repairListStrings[1],repairListStrings[2], carNumber, distance,estimateImgUrl,carImgUrl, LocalDateTime.parse(date));
-                lists.add(reg);
-                System.out.println(reg);
-            }
-        } catch (IOException | ClassNotFoundException | NoSuchMethodException |
-                 InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            //handle exception..
-            System.out.print("ERROR!!!!!: ");
+			length = ((Uint256) result.get(0)).getValue().intValue();
 
-            System.out.println(e);
-        }
+		} catch (IOException | ClassNotFoundException | NoSuchMethodException |
+			InvocationTargetException | InstantiationException | IllegalAccessException e) {
+			//handle exception..
+			System.out.print("ERROR!!!!!: ");
 
-        return lists;
-    }
+			System.out.println(e);
+		}
 
-    public int getMaintenanceCountByCarNumber(String carNumber) {
-        int length = 0;
-
-        try{
-            Contract contract = caver.contract.create(contractABI, contractAddress);
-
-            List<Type> result = contract.call("getMaintenanceCount", carNumber);
-
-            length=((Uint256)result.get(0)).getValue().intValue();
-
-        } catch (IOException | ClassNotFoundException | NoSuchMethodException |
-                 InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            //handle exception..
-            System.out.print("ERROR!!!!!: ");
-
-            System.out.println(e);
-        }
-
-        return length;
-    }
+		return length;
+	}
 
 }
