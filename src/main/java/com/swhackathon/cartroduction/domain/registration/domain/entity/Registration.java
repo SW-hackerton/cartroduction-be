@@ -1,18 +1,14 @@
 package com.swhackathon.cartroduction.domain.registration.domain.entity;
 
-import com.swhackathon.cartroduction.domain.registration.domain.enumeration.Category;
-import com.swhackathon.cartroduction.domain.user.domain.entity.User;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,16 +27,11 @@ public class Registration {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-
 	@Column(name = "manager_name", nullable = false)
 	private String managerName;
 
-	@Enumerated(EnumType.STRING)
-	private Category category;
-
-	private String content;
-
-	private String price;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<RepairList> repairList;
 
 	@Column(name = "car_number", nullable = false)
 	private String carNumber;
@@ -55,21 +46,5 @@ public class Registration {
 	private String carImageUrl;
 
 	@CreationTimestamp
-	private LocalDateTime date;
-
-	@Override
-	public String toString() {
-		return "Registration{" +
-				"id=" + id +
-				", managerName='" + managerName + '\'' +
-				", category=" + category +
-				", content='" + content + '\'' +
-				", price='" + price + '\'' +
-				", carNumber='" + carNumber + '\'' +
-				", carDistance='" + carDistance + '\'' +
-				", estimatesImageUrl='" + estimatesImageUrl + '\'' +
-				", carImageUrl='" + carImageUrl + '\'' +
-				", date=" + date +
-				'}';
-	}
+	private LocalDate date;
 }

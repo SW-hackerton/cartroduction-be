@@ -22,7 +22,7 @@ public class RegistrationController {
 
 	public final RegistrationService registrationService;
 
-	@PostMapping("/manager/register")
+	@PostMapping(value = "/manager/register")
 	public ResponseEntity<Registration> register(
 		@Validated @RequestBody RegistrationRequest request) {
 		Registration registration = request.toEntity();

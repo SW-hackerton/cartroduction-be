@@ -1,8 +1,8 @@
 package com.swhackathon.cartroduction.domain.registration.dto;
 
 import com.swhackathon.cartroduction.domain.registration.domain.entity.Registration;
-import com.swhackathon.cartroduction.domain.registration.domain.enumeration.Category;
-import java.time.LocalDateTime;
+import com.swhackathon.cartroduction.domain.registration.domain.entity.RepairList;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +14,7 @@ public class RegistrationResponse {
 
 	private String managerName;
 
-	private Category category;
-
-	private String content;
-
-	private String price;
+	private RepairList repairList;
 
 	private String carNumber;
 
@@ -28,15 +24,13 @@ public class RegistrationResponse {
 
 	private String carImageUrl;
 
-	private LocalDateTime date;
+	private LocalDate date;
 
 	public static Registration of(Registration registration) {
 		return Registration.builder()
 			.id(registration.getId())
 			.managerName(registration.getManagerName())
-			.category(registration.getCategory())
-			.content(registration.getContent())
-			.price(registration.getPrice())
+			.repairList(registration.getRepairList())
 			.carNumber(registration.getCarNumber())
 			.carDistance(registration.getCarDistance())
 			.estimatesImageUrl(registration.getEstimatesImageUrl())
