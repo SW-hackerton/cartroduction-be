@@ -11,6 +11,8 @@ import com.swhackathon.cartroduction.domain.dashboard.domain.Tire;
 import com.swhackathon.cartroduction.domain.registration.domain.entity.Registration;
 import com.swhackathon.cartroduction.domain.registration.domain.entity.RepairList;
 import com.swhackathon.cartroduction.domain.registration.domain.enumeration.Category;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -57,6 +59,10 @@ public class DashboardResponse {
 		//inspection
 		List<Integer> inspectionReplacementKmList = new ArrayList<>();
 
+		//
+		LocalDate startDate;
+		LocalDate endDate;
+
 		for (Registration registration : registrations) {
 			List<RepairList> repairLists = registration.getRepairList();
 			for (RepairList repairList : repairLists) {
@@ -80,7 +86,6 @@ public class DashboardResponse {
 				if (repairList.getCategory().equals(Category.차량점검)) {
 					inspectionReplacementKmList.add(registration.getCarDistance());
 				}
-
 			}
 		}
 
@@ -94,8 +99,24 @@ public class DashboardResponse {
 		Flooding flooding = new Flooding(isFlooding);
 		NormalRepair normalRepair = new NormalRepair(normalCount, normalRepairPrice);
 		Inspection inspection = new Inspection(inspectionReplacementCycle, inspectionReplacementKmList.size());
-		return new DashboardList(engineOil, tire, accidentRepair, flooding, normalRepair,
-			inspection);
+		double carDistancePerMonth = calculateDistancePerMonth(registrations);
+		return new DashboardList(engineOil, tire, accidentRepair, flooding, normalRepair, inspection, carDistancePerMonth);
+	}
+
+	private static double calculateDistancePerMonth(List<Registration> registrations) {
+		LocalDate startDate = registrations.get(0).getDate();
+		int lastIndex = registrations.size() - 1;
+		LocalDate lastDate = registrations.get(lastIndex).getDate();
+		Integer dayDifference = calculateDayDifference(startDate, lastDate);
+		int startDistance = registrations.get(0).getCarDistance();
+		int lastDistance = registrations.get(lastIndex).getCarDistance();
+		System.out.println("startDistance = " + startDistance);
+		System.out.println("lastDistance = " + lastDistance);
+		System.out.println("dayDifference = " + dayDifference);
+		if (dayDifference == 0) {
+			return startDistance;
+		}
+		return ((lastDistance - startDistance) / dayDifference) * 30;
 	}
 
 	private static Integer calculateDifferenceKm(List<Integer> replacementKmList) {
@@ -112,5 +133,9 @@ public class DashboardResponse {
 			differences.add(replacementKmList.get(i + 1) - replacementKmList.get(i));
 		}
 		return (differences.stream().mapToInt(Integer::intValue).sum() + firstKm) / (size);
+	}
+
+	private static Integer calculateDayDifference(LocalDate startDay, LocalDate endDay) {
+		return Long.valueOf(ChronoUnit.DAYS.between(startDay, endDay)).intValue();
 	}
 }

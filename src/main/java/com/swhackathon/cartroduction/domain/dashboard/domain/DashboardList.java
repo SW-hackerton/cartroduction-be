@@ -15,4 +15,5 @@ public class DashboardList {
 	private final Flooding flooding;
 	private final NormalRepair normalRepair;
 	private final Inspection inspection;
+	private final double carDistancePerMonth;
 }
