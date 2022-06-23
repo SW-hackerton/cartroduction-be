@@ -30,5 +30,5 @@ public class RepairList {
 
 	private String content;
 
-	private String price;
+	private int price;
 }

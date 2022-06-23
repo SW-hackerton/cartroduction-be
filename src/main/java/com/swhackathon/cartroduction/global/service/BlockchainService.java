@@ -52,7 +52,7 @@ public class BlockchainService {
 		String managerName = registration.getManagerName();
 		String date = registration.getDate().toString();
 		String carNumber = registration.getCarNumber();
-		String carDistance = registration.getCarDistance();
+		int carDistance = registration.getCarDistance();
 
 		List<RepairList> repairLists = registration.getRepairList();
 
@@ -100,14 +100,14 @@ public class BlockchainService {
 				long userId = ((Uint256) result.get(0)).getValue().longValue();
 				String name = (String) result.get(1).getValue();
 				String date = (String) result.get(2).getValue();
-				String distance = (String) result.get(3).getValue();
+				int distance = (int) result.get(3).getValue();
 
 				//repairList 만들기
 				String repairListStrings[] = ((String) result.get(4).getValue()).split(";");
 				List<RepairList> repairLists = new ArrayList<>();
 				for(String s:repairListStrings) {
 					String repair[] = s.split(":",3);
-					RepairList rl = new RepairList(null, Category.valueOf(repair[0]), repair[1], repair[2]);
+					RepairList rl = new RepairList(null, Category.valueOf(repair[0]), repair[1], Integer.parseInt(repair[2]));
 
 					repairLists.add(rl);
 				}
