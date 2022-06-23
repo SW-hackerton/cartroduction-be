@@ -37,8 +37,8 @@ public class RegistrationRequest {
 			.repairList(repairList)
 			.carNumber(this.carNumber)
 			.carDistance(this.carDistance)
-			.estimatesImageUrl(this.estimatesImageUrl)
-			.carImageUrl(this.carImageUrl)
+			.estimatesImageUrl("www.naver.com")
+			.carImageUrl("www.daum.net")
 			.date(this.date)
 			.build();
 	}
