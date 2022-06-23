@@ -30,8 +30,11 @@ import java.util.List;
 @Transactional
 public class BlockchainService {
 
+	private final IpfsService ipfsService = new IpfsService();
+
 	private final SingleKeyring executor;
 	private final Caver caver = new Caver("https://api.baobab.klaytn.net:8651/");
+
 
 	//생성자에서 관리자 지갑 추가
 	@Autowired
@@ -60,8 +63,8 @@ public class BlockchainService {
 					+data.getContent()+":"+data.getPrice()+";";
 		}
 
-		String carImgUrl = registration.getCarImageUrl();
-		String estimatesImgUrl = registration.getEstimatesImageUrl();
+		String carImgUrl = ipfsService.uploadImg(registration.getCarImageUrl());
+		String estimatesImgUrl = ipfsService.uploadImg(registration.getEstimatesImageUrl());
 
 		try {
 			Contract contract = caver.contract.create(contractABI, contractAddress);

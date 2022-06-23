@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.web3j.crypto.CipherException;
 
 import javax.websocket.server.PathParam;
@@ -18,10 +19,11 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin("*")
 public class BlockchainRegistrationController {
     public final BlockchainService blockchainService;
 
-    @PostMapping(value = "/manager/register2")
+    @PostMapping(value = "/manager/register")
     public ResponseEntity register(
             @Validated @RequestBody RegistrationRequest request) throws CipherException, IOException {
         Registration registration = request.toEntity();
@@ -30,8 +32,8 @@ public class BlockchainRegistrationController {
         blockchainService.RegistToBC(registration);
         return new ResponseEntity<>("success", HttpStatus.CREATED);
     }
-    
-    @GetMapping("/manager/{keyword}")
+
+    @GetMapping("/{keyword}")
     public ResponseEntity<List<Registration>> getMaintenanceByCarNames(@PathVariable("keyword") String keyword) {
 
         System.out.println(keyword);
