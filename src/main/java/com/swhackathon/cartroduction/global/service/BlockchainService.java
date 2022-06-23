@@ -11,6 +11,7 @@ import com.klaytn.caver.wallet.keyring.SingleKeyring;
 import com.swhackathon.cartroduction.domain.registration.domain.entity.Registration;
 import com.swhackathon.cartroduction.domain.registration.domain.entity.RepairList;
 import com.swhackathon.cartroduction.domain.registration.domain.enumeration.Category;
+import com.swhackathon.cartroduction.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -94,7 +95,7 @@ public class BlockchainService {
             for(int i = 0; i < count;i++) {
                 List<Type> result = contract.call("getMaintenance", carNumber, i);
 
-                long id = ((Uint256)result.get(0)).getValue().longValue();
+                long userId = ((Uint256)result.get(0)).getValue().longValue();
                 String name = (String)result.get(1).getValue();
                 String date = (String)result.get(2).getValue();
                 String distance = ((Uint256)result.get(3)).getValue().toString();
@@ -102,12 +103,12 @@ public class BlockchainService {
                 //repairList 만들기
                 String repairListStrings[] = ((String)result.get(4).getValue()).split(":", 3);
 
-                RepairList repairList = new RepairList((long)i, Category.valueOf(repairListStrings[0]),repairListStrings[1],repairListStrings[2]);
-
                 String carImgUrl = (String)result.get(5).getValue();
                 String estimateImgUrl = (String)result.get(6).getValue();
 
-                Registration reg = new Registration(id,name, repairList, date,distance,estimateImgUrl,carImgUrl, LocalDateTime.parse(date));
+                //User user = new User().findById
+
+                Registration reg = new Registration(userId,name, Category.valueOf(repairListStrings[0]),repairListStrings[1],repairListStrings[2], date,distance,estimateImgUrl,carImgUrl, LocalDateTime.parse(date));
                 lists.add(reg);
             }
         } catch (IOException | ClassNotFoundException | NoSuchMethodException |
