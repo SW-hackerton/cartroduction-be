@@ -9,9 +9,9 @@ import com.klaytn.caver.methods.response.TransactionReceipt;
 import com.klaytn.caver.wallet.keyring.KeyringFactory;
 import com.klaytn.caver.wallet.keyring.SingleKeyring;
 import com.swhackathon.cartroduction.domain.registration.domain.entity.Registration;
-import com.swhackathon.cartroduction.domain.registration.domain.entity.RepairList;
 import com.swhackathon.cartroduction.domain.registration.domain.enumeration.Category;
-import com.swhackathon.cartroduction.domain.user.domain.User;
+import com.swhackathon.cartroduction.domain.user.domain.entity.User;
+import com.swhackathon.cartroduction.domain.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +23,7 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.web3j.crypto.CipherException;
 import org.web3j.protocol.exceptions.TransactionException;
 
@@ -35,18 +36,28 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
+@Transactional
 public class BlockchainService {
 
     //스마트 컨트랙트 메소드 사용에 필요한 필수 정보
+    /*
     String contractAddress = "";
     String contractABI = "";
     String privateKey = "";
+*/
+    String contractAddress = "0x1E1466ecfa35B26aB5c7b41Da1b410E58b9F5954";
+    String contractABI = "[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\",\"signature\":\"constructor\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_userId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_managerName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_date\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_carNumber\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_carDistance\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_repairList\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_carImgUrl\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_estimatesImgUrl\",\"type\":\"string\"}],\"name\":\"resistMaintenanceData\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"signature\":\"0x586924a6\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"string\",\"name\":\"_carNumber\",\"type\":\"string\"}],\"name\":\"getMaintenanceCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\",\"signature\":\"0xf9552811\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"string\",\"name\":\"_carNumber\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"idx\",\"type\":\"uint256\"}],\"name\":\"getMaintenance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\",\"signature\":\"0x7c76bd4f\"}]";
+    String privateKey = "0x6aac4e8d4ed4cd5193a67733ec499236a9a66f1b073ef7955a02520cc2286157";
+
+
+
 
     SingleKeyring executor;
 
     Caver caver = new Caver("https://api.baobab.klaytn.net:8651/");
 
     //생성자에서 관리자 지갑 추가
+    @Autowired
     public BlockchainService() {
         System.out.print(privateKey);
         executor = KeyringFactory.createFromPrivateKey(privateKey);
@@ -108,8 +119,9 @@ public class BlockchainService {
 
                 //User user = new User().findById
 
-                Registration reg = new Registration(userId,name, Category.valueOf(repairListStrings[0]),repairListStrings[1],repairListStrings[2], date,distance,estimateImgUrl,carImgUrl, LocalDateTime.parse(date));
+                Registration reg = new Registration(userId, name, Category.valueOf(repairListStrings[0]),repairListStrings[1],repairListStrings[2], carNumber, distance,estimateImgUrl,carImgUrl, LocalDateTime.parse(date));
                 lists.add(reg);
+                System.out.println(reg);
             }
         } catch (IOException | ClassNotFoundException | NoSuchMethodException |
                  InvocationTargetException | InstantiationException | IllegalAccessException e) {

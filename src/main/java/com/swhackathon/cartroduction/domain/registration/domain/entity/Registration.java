@@ -31,9 +31,6 @@ public class Registration {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
 
 	@Column(name = "manager_name", nullable = false)
 	private String managerName;
@@ -65,7 +62,9 @@ public class Registration {
 		return "Registration{" +
 				"id=" + id +
 				", managerName='" + managerName + '\'' +
-				", repairList=" + repairList +
+				", category=" + category +
+				", content='" + content + '\'' +
+				", price='" + price + '\'' +
 				", carNumber='" + carNumber + '\'' +
 				", carDistance='" + carDistance + '\'' +
 				", estimatesImageUrl='" + estimatesImageUrl + '\'' +
