@@ -21,26 +21,28 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin("*")
 public class BlockchainRegistrationController {
-    public final BlockchainService blockchainService;
 
-    @PostMapping(value = "/manager/register2")
-    public ResponseEntity register(
-            @Validated @RequestBody RegistrationRequest request) throws CipherException, IOException {
-        Registration registration = request.toEntity();
+	public final BlockchainService blockchainService;
 
-        System.out.println("registration.toString() = " + registration.toString());
-        blockchainService.RegistToBC(registration);
-        return new ResponseEntity<>("success", HttpStatus.CREATED);
-    }
+	@PostMapping("/manager/register")
+	public ResponseEntity register(
+		@Validated @RequestBody RegistrationRequest request) throws CipherException, IOException {
+		Registration registration = request.toEntity();
 
-    @GetMapping("/2/{keyword}")
-    public ResponseEntity<List<Registration>> getMaintenanceByCarNames(@PathVariable("keyword") String keyword) {
+		System.out.println("registration.toString() = " + registration.toString());
+		blockchainService.RegistToBC(registration);
+		return new ResponseEntity<>("success", HttpStatus.CREATED);
+	}
 
-        System.out.println(keyword);
-        return ResponseEntity.ok()
-                .body(blockchainService.getMaintenanceListsByCarNumber(keyword).stream()
-                        .map(RegistrationResponse::of)
-                        .collect(Collectors.toList()));
-    }
+	@GetMapping("/{keyword}")
+	public ResponseEntity<List<Registration>> getMaintenanceByCarNames(
+		@PathVariable("keyword") String keyword) {
+
+		System.out.println(keyword);
+		return ResponseEntity.ok()
+			.body(blockchainService.getMaintenanceListsByCarNumber(keyword).stream()
+				.map(RegistrationResponse::of)
+				.collect(Collectors.toList()));
+	}
 
 }

@@ -1,3 +1,4 @@
+/*
 package com.swhackathon.cartroduction.domain.registration.controller;
 
 import com.swhackathon.cartroduction.domain.registration.domain.entity.Registration;
@@ -22,7 +23,7 @@ public class RegistrationController {
 
 	public final RegistrationService registrationService;
 
-	@PostMapping(value = "/manager/register")
+	@PostMapping("/manager/register")
 	public ResponseEntity<Registration> register(
 		@Validated @RequestBody RegistrationRequest request) {
 		Registration registration = request.toEntity();
@@ -45,3 +46,4 @@ public class RegistrationController {
 				.collect(Collectors.toList()));
 	}
 }
+*/

@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DashboardController {
 
-	private final RegistrationService registrationService;
+//	private final RegistrationService registrationService;
 	public final BlockchainService blockchainService;
 
 	@GetMapping("/{carNumber}")
 	public ResponseEntity<DashboardResponse> findDashboardsByCarNumber(
 		@PathParam("carNumber") String carNumber) {
-//		List<Registration> registrations = blockchainService.getMaintenanceListsByCarNumber(carNumber);
-		List<Registration> registrations = registrationService.findByCarName(carNumber);
+		List<Registration> registrations = blockchainService.getMaintenanceListsByCarNumber(carNumber);
+//		List<Registration> registrations = registrationService.findByCarName(carNumber);
 		List<RepairInfo> repairInfo = registrations.stream()
 			.map(RepairInfo::of)
 			.collect(Collectors.toList());
