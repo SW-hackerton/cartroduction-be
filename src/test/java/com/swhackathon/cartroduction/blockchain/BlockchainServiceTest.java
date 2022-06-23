@@ -41,21 +41,32 @@ public class BlockchainServiceTest {
     }
 
     @Test
-    void ipfsUploadTest() throws IOException {
+    void ipfsUploadUrlTest() throws IOException {
+        System.out.println(ipfsService.uploadImg("src/main/resources/button.png"));
+    }
+
+    @Test
+    void ipfsUploadByteTest() throws IOException {
         BufferedImage bImage = ImageIO.read(img);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ImageIO.write(bImage, "png", bos);
         byte[] data = bos.toByteArray();
+        System.out.println("");
         System.out.print(bos);
+        System.out.println("length");
+        System.out.println(data.length);
         System.out.print(data);
+        System.out.println("");
         System.out.print("이미지 업로드");
-        System.out.println(ipfsService.uploadImg("src/main/resources/button.png"));
+        System.out.println(ipfsService.uploadImg(data));
 
     }
 
     @Test
     void ipfsDownloadTest() throws IOException {
-        byte[] code = ipfsService.getImg("QmZ7AnUeMdiJsqedw3fx6NLMW24nUsMw67kHRrRx6d9ahw");
+        //byte[] code = ipfsService.getImg("QmZ7AnUeMdiJsqedw3fx6NLMW24nUsMw67kHRrRx6d9ahw");
+        byte[] code = ipfsService.getImg("QmTv3dexGexy7MqnEZNzzxqwmjXh6zudKRt1mSqy9YbSa7");
+
         String str = new String(code);
         System.out.println(str);
     }

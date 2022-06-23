@@ -20,9 +20,14 @@ public class IpfsService {
     }
 
     public String uploadImg(byte[] bytecode) throws IOException {
-        System.out.print("in uploadImg");
+        String host = "ipfs.infura.io";
+        int port = 5001;
+        boolean isSSL = true;
+        caver.ipfs.setIPFSNode(host,port,isSSL);
 
-        System.out.print(bytecode);
+        System.out.println("in uploadImg");
+
+        System.out.println(bytecode.length);
 
         return caver.ipfs.add(bytecode);
     }
