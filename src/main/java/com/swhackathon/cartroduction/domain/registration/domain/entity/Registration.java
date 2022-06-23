@@ -24,7 +24,6 @@ public class Registration {
 
 	@Id
 	@Column(name = "registration_form_id", nullable = false)
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(name = "manager_name", nullable = false)

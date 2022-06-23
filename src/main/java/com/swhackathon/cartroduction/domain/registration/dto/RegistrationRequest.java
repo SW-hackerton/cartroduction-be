@@ -14,6 +14,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class RegistrationRequest {
 
+	private long id;
 	private String managerName;
 
 	private List<RepairListRequest> repairList;
@@ -33,6 +34,7 @@ public class RegistrationRequest {
 			.map(RepairListRequest::toEntity)
 			.collect(Collectors.toList());
 		return Registration.builder()
+			.id(this.id)
 			.managerName(this.managerName)
 			.repairList(repairList)
 			.carNumber(this.carNumber)

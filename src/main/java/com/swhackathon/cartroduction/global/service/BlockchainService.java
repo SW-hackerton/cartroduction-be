@@ -42,6 +42,9 @@ public class BlockchainService {
 
 	//블록체인에 데이터 등록
 	public void RegistToBC(Registration registration) throws CipherException, IOException {
+
+		System.out.println(registration.toString());
+
 		long userId = registration.getId();
 		String managerName = registration.getManagerName();
 		String date = registration.getDate().toString();
@@ -69,7 +72,7 @@ public class BlockchainService {
 
 			sendOptions.setGas(BigInteger.valueOf(4000000));
 			TransactionReceipt.TransactionReceiptData receipt = contract.send(sendOptions,
-				"resistMaintenanceData", userId, managerName, date,
+				"registMaintenanceData", userId, managerName, date,
 				carNumber, carDistance, repairListString, carImgUrl, estimatesImgUrl);
 			System.out.println(receipt);
 		} catch (IOException | TransactionException | ClassNotFoundException | NoSuchMethodException |
@@ -94,7 +97,7 @@ public class BlockchainService {
 				long userId = ((Uint256) result.get(0)).getValue().longValue();
 				String name = (String) result.get(1).getValue();
 				String date = (String) result.get(2).getValue();
-				String distance = ((Uint256) result.get(3)).getValue().toString();
+				String distance = (String) result.get(3).getValue();
 
 				//repairList 만들기
 				String repairListStrings[] = ((String) result.get(4).getValue()).split(";");
