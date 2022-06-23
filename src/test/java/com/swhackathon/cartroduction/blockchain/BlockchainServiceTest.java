@@ -1,6 +1,7 @@
 package com.swhackathon.cartroduction.blockchain;
 
 import com.swhackathon.cartroduction.domain.registration.domain.entity.Registration;
+import com.swhackathon.cartroduction.domain.registration.domain.entity.RepairList;
 import com.swhackathon.cartroduction.domain.registration.domain.enumeration.Category;
 import com.swhackathon.cartroduction.global.service.BlockchainService;
 import com.swhackathon.cartroduction.global.service.IpfsService;
@@ -13,29 +14,50 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 public class BlockchainServiceTest {
 
     BlockchainService blockchainService = new BlockchainService();
-    Registration reg = new Registration((long)3,"고고유진", Category.엔진오일교체,"b","c", "33삼3333", "235","url1","url2", LocalDateTime.now());
 
     File img = new File("src/main/resources/button.png");
     IpfsService ipfsService = new IpfsService();
 
     @Test
     void registTest() throws CipherException, IOException {
+        RepairList rl = new RepairList(null, Category.엔진오일교체,"b","c");
+        List<RepairList> repairLists = new ArrayList<>();
+        repairLists.add(rl);
+        Registration reg = new Registration((long)1,"고고유진", repairLists, "22이2222", "235","url1","url2", LocalDate.now());
+
+
+
         blockchainService.RegistToBC(reg);
     }
 
     @Test
     void getMaintTest() {
+        RepairList rl = new RepairList(null, Category.엔진오일교체,"b","c");
+        List<RepairList> repairLists = new ArrayList<>();
+        repairLists.add(rl);
+        Registration reg = new Registration(null,"고고유진", repairLists, "22이2222", "235","url1","url2", LocalDate.now());
+
+
         blockchainService.getMaintenanceListsByCarNumber(reg.getCarNumber());
     }
 
     @Test
     void getMaintCountTest(){
+        RepairList rl = new RepairList(null, Category.엔진오일교체,"b","c");
+        List<RepairList> repairLists = new ArrayList<>();
+        repairLists.add(rl);
+        Registration reg = new Registration(null,"고고유진", repairLists, "22이2222", "235","url1","url2", LocalDate.now());
+
+
         blockchainService.getMaintenanceCountByCarNumber(reg.getCarNumber());
 
     }

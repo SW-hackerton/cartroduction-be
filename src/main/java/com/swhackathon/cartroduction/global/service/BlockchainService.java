@@ -11,6 +11,7 @@ import com.klaytn.caver.methods.response.TransactionReceipt;
 import com.klaytn.caver.wallet.keyring.KeyringFactory;
 import com.klaytn.caver.wallet.keyring.SingleKeyring;
 import com.swhackathon.cartroduction.domain.registration.domain.entity.Registration;
+import com.swhackathon.cartroduction.domain.registration.domain.entity.RepairList;
 import com.swhackathon.cartroduction.domain.registration.domain.enumeration.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import org.web3j.protocol.exceptions.TransactionException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,9 +47,16 @@ public class BlockchainService {
 		String date = registration.getDate().toString();
 		String carNumber = registration.getCarNumber();
 		String carDistance = registration.getCarDistance();
-		String repairListString =
-			"" + registration.getCategory().toString() + ":" + registration.getContent() + ":"
-				+ registration.getPrice();
+
+		List<RepairList> repairLists = registration.getRepairList();
+
+		String repairListString = "";
+
+		for(RepairList data : repairLists){
+			repairListString += data.getCategory().toString()+":"
+					+data.getContent()+":"+data.getPrice()+";";
+		}
+
 		String carImgUrl = registration.getCarImageUrl();
 		String estimatesImgUrl = registration.getEstimatesImageUrl();
 
@@ -89,17 +97,21 @@ public class BlockchainService {
 				String distance = ((Uint256) result.get(3)).getValue().toString();
 
 				//repairList 만들기
-				String repairListStrings[] = ((String) result.get(4).getValue()).split(":", 3);
+				String repairListStrings[] = ((String) result.get(4).getValue()).split(";");
+				List<RepairList> repairLists = new ArrayList<>();
+				for(String s:repairListStrings) {
+					String repair[] = s.split(":",3);
+					RepairList rl = new RepairList(null, Category.valueOf(repair[0]), repair[1], repair[2]);
+
+					repairLists.add(rl);
+				}
 
 				String carImgUrl = (String) result.get(5).getValue();
 				String estimateImgUrl = (String) result.get(6).getValue();
 
-				//User user = new User().findById
-
 				Registration reg = new Registration(userId, name,
-					Category.valueOf(repairListStrings[0]), repairListStrings[1],
-					repairListStrings[2], carNumber, distance, estimateImgUrl, carImgUrl,
-					LocalDateTime.parse(date));
+					repairLists, carNumber, distance, estimateImgUrl, carImgUrl,
+					LocalDate.parse(date));
 				lists.add(reg);
 				System.out.println(reg);
 			}
@@ -110,6 +122,8 @@ public class BlockchainService {
 
 			System.out.println(e);
 		}
+
+		System.out.println(lists.get(0).toString());
 
 		return lists;
 	}
