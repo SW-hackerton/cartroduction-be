@@ -1,7 +1,7 @@
 package com.swhackathon.cartroduction.domain.registration.domain.entity;
 
 import com.swhackathon.cartroduction.domain.registration.domain.enumeration.Category;
-import com.swhackathon.cartroduction.domain.user.domain.User;
+import com.swhackathon.cartroduction.domain.user.domain.entity.User;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
