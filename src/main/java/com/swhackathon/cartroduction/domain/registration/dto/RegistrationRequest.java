@@ -5,6 +5,8 @@ import com.swhackathon.cartroduction.domain.registration.domain.entity.RepairLis
 import com.swhackathon.cartroduction.domain.registration.domain.enumeration.Category;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,11 +16,7 @@ public class RegistrationRequest {
 
 	private String managerName;
 
-	private Category category;
-
-	private String content;
-
-	private String price;
+	private List<RepairListRequest> repairList;
 
 	private String carNumber;
 
@@ -31,8 +29,9 @@ public class RegistrationRequest {
 	private LocalDate date;
 
 	public Registration toEntity() {
-
-		final List<RepairList> repairList = RepairListResponse.of(category, content, price);
+		final List<RepairList> repairList = this.repairList.stream()
+			.map(RepairListRequest::toEntity)
+			.collect(Collectors.toList());
 		return Registration.builder()
 			.managerName(this.managerName)
 			.repairList(repairList)
