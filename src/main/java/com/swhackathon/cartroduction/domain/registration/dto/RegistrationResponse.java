@@ -18,7 +18,7 @@ public class RegistrationResponse {
 
 	private String carNumber;
 
-	private String carDistance;
+	private int carDistance;
 
 	private String estimatesImageUrl;
 

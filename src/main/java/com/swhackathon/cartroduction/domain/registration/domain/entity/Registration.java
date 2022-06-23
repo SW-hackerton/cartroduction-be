@@ -5,15 +5,12 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Builder
@@ -36,7 +33,7 @@ public class Registration {
 	private String carNumber;
 
 	@Column(name = "car_distance", nullable = false)
-	private String carDistance;
+	private int carDistance;
 
 	@Column(name = "estimates_image_url", nullable = false)
 	private String estimatesImageUrl;
@@ -44,7 +41,6 @@ public class Registration {
 	@Column(name = "car_image_url", nullable = false)
 	private String carImageUrl;
 
-	@CreationTimestamp
 	private LocalDate date;
 
 	@Override

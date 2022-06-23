@@ -13,7 +13,7 @@ public class RepairListRequest {
 
 	private String content;
 
-	private String price;
+	private int price;
 
 	public RepairList toEntity() {
 		return RepairList.builder()

@@ -2,11 +2,9 @@ package com.swhackathon.cartroduction.domain.registration.dto;
 
 import com.swhackathon.cartroduction.domain.registration.domain.entity.Registration;
 import com.swhackathon.cartroduction.domain.registration.domain.entity.RepairList;
-import com.swhackathon.cartroduction.domain.registration.domain.enumeration.Category;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -21,7 +19,7 @@ public class RegistrationRequest {
 
 	private String carNumber;
 
-	private String carDistance;
+	private int carDistance;
 
 	private String estimatesImageUrl;
 
