@@ -3,16 +3,15 @@ package com.swhackathon.cartroduction.domain.dashboard.controller;
 import com.swhackathon.cartroduction.domain.dashboard.domain.RepairInfo;
 import com.swhackathon.cartroduction.domain.dashboard.dto.DashboardResponse;
 import com.swhackathon.cartroduction.domain.registration.domain.entity.Registration;
-import com.swhackathon.cartroduction.domain.registration.service.RegistrationService;
 import com.swhackathon.cartroduction.global.service.BlockchainService;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -24,7 +23,7 @@ public class DashboardController {
 
 	@GetMapping("/dashboard/{carNumber}")
 	public ResponseEntity<DashboardResponse> findDashboardsByCarNumber(
-		@PathParam("carNumber") String carNumber) {
+		@PathVariable("carNumber") String carNumber) {
 		String decodeKeyword = URLDecoder.decode(carNumber, StandardCharsets.UTF_8);
 		List<Registration> registrations = blockchainService.getMaintenanceListsByCarNumber(decodeKeyword);
 //		List<Registration> registrations = registrationService.findByCarName(carNumber);
